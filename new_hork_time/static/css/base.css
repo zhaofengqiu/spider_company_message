@@ -1,0 +1,22 @@
+body{
+    background: #00ffff;
+    overflow:scroll;
+}
+
+.main{
+    background: #fff;
+    width: 730px;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 10px;
+
+}
+hr {
+    margin-top:7px;
+    *margin: 0;
+    border: 0;
+    color: #FFF;
+    background-color: black;
+    height: 3px
+}
+

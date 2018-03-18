@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block title  %}{{ articledata.section }}{% endblock %}
+{% block main %}
+    <h1 align="center">{{ articledata.new.headline }}</h1>
+    {{ articledata.text |safe }}
+{% endblock %}
