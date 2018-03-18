@@ -1,0 +1,11 @@
+
+
+什么是urllib
+
+urllib。request 请求模块
+
+urllib.error  异常处理模块
+
+urllib.parse  url解析模块
+
+urllib.roborarser robots.txt  解析模块(判断网站是否可以爬取（不常用）)

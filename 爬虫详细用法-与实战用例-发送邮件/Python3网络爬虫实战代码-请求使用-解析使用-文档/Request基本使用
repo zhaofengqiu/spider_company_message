@@ -1,0 +1,244 @@
+
+
+Reuqests中文学习手册：
+http://docs.python-requests.org/zh_CN/latest/user/quickstart.html
+
+Reuqests官方手册：
+http://www.python-requests.org/en/master/
+
+安装：pip3 install requests
+
+
+学习过程：
+
+#导入requests模块
+import requests
+
+-------------------------------------------------------------
+#get方法请求
+#不带参数的时候一般都是get请求方式
+response = requests.get('https://www.baidu.com')
+
+#返回请求后返回的类型
+print(type(response))
+
+#返回状态码
+#print(response.status_code)
+
+#返回解析后的文本数据类型
+print(type(reponse.text))
+
+#返回解析后的数据
+print(reponse.text)
+
+#返回cookies信息
+print(response.cookies)
+-----------------------------------------------------------------------.
+
+
+
+请求方法：
+-----------------------------------
+request.post
+request.get
+request.delete
+request.put
+----------------------------------------
+
+
+get请求基本用法：
+------------------------------------
+#不带参数的时候一般都是get请求方式
+response = requests.get('https://www.baidu.com')
+
+
+#带参数的时候一般都是get请求方式
+response = requests.get('https://httpbin.org/get?name=germey&age=22')
+print(response)
+
+
+#变量方式带参
+date={
+    'name':'germey',
+    'age':22
+}
+response = requests.get('https://httpbin.org/get',params=date)
+print(response.text)
+
+
+#解析json
+response = requests.get('https://httpbin.org/get')
+print(type(response.text))
+print(response.text)
+print(response.json())
+print(type(response.json()))
+
+
+#获取二进制数据
+response = requests.get('https://github.com/favicon.ico')
+print(type(response.text),type(response.content))
+print(response.text)
+print(response.content)
+
+#把爬去下来的二进制文件写入本地
+response = requests.get('https://github.com/favicon.ico')
+with open('favicon.ico','wb') as f:
+    f.write(response.content)
+    f.colose()
+
+
+#添加headers
+response = requests.get('https://www.zhihu.com/explore')
+print(response.text)
+
+headers = {
+    'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36'
+}
+
+response = requests.get('https://www.zhihu.com/explore',headers=headers)
+print(response.text)
+
+---------------------------------------------------------------------------
+
+
+
+
+post请求：
+-------------------------------------------------
+
+#基本post请求
+data = {'name':'germey','age':22}
+
+headers = {
+    'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36'
+}
+
+response = requests.post('https:httpbin.org/post',data=data)
+print(response.text)
+
+response = requests.post('https:httpbin.org/post',data=data,headers=headers)
+print(response.json())
+--------------------------------------------------------------
+
+
+响应：
+--------------------------------------------------------
+
+#response属性
+reponse = requests.get('http://www.jianshu.com')
+
+#状态码
+print(type(reponse.status_code),reponse.status_code)
+
+#头部信息
+print(type(reponse.headers),reponse.headers)
+
+#cookies信息
+print(type(reponse.cookies),reponse.cookies)
+
+#url信息
+print(type(reponse.url),reponse.url)
+
+#history历史记录
+print(type(reponse.history),reponse.history)
+---------------------------------------------------------
+
+
+
+状态码判断：
+-------------------------------------------------------------------
+response = requests.get('http://jianshu.com')
+exit() if not response.status_code == requests.codes.ok else print('Request Successfully')
+
+response = requests.get('http://jianshu.com')
+exit() if not response.status_code == 20 else print('Request Successfully')
+--------------------------------------------------------------------------------
+
+
+高级操作：
+-------------------------------------------------
+
+#文件上传
+files = {'file'open('favicon.ico','rb')}
+response = requests.post('http://httpbin.org/post',files=files)
+print(response.text)
+
+
+#获取cookie
+response = requests.get('https://www.baidu.com')
+print(response.cookies)
+for key,value in response.cookies.items():
+    print(key + '=' + value)
+
+
+#绘画维持
+#模拟登录
+s.get('http://httpbin.org/cookies/set/number/123456789')
+response = s.get('http://httpbin.org/cookies')
+print(response.text)
+
+s = requests.Session()
+s.get('http://httpbin.org/cookies/set/number/123456789')
+response = s.get('http://httpbin.org/cookies')
+print(response.text)
+
+
+#证书验证
+response = requests.get('https://www.12306.cn')
+print(response.status_code)
+
+import requests
+#加上下面两行是为了去除证书的警告信息
+from requests.packages import urllib3
+urllib3.disable_warnings()
+response = requests.get('https://www.12306.cn',verfy=False)
+print(response.status_code)
+
+#手动添加证书
+response = requests.get('https://www.12306.cn',cert=('/path/server.crt,'/path/key'))
+print(response.status_code)
+
+
+
+#代理设置
+proxies = {
+    'http':'http://127.0.0.1:9743',
+    'https':'https://127.0.0.1:9743'
+}
+response = requests.get('https://www.taobao.com',proxies=proxies)
+print(response.status_code)
+
+proxies = {
+    'http':'http://user:password@127.0.0.1:9743/'
+}
+response = requests.get('https://www.taobao.com',proxies=proxies)
+print(response.status_code)
+
+
+
+
+#超时设置
+response = requests.get('https://www.taobao.com',timeout=1)
+print(response.status_code)
+
+
+#认证设置
+from requests.auth import HTTPBasicAuth
+r = requests.get('http://120.27.34.24:9001',auth=HTTPBasicAuth('user','123'))
+print(r.status_code)
+
+r = requests.get('http://120.27.34.24:9001',auth=('user','123'))
+print(r.status_code)
+
+
+#异常处理
+from requests.exceptions import ReadTimeout,HTTPError,RequestException
+try:
+    response = requests.get('http://httpbin.org/get',timeout=0.1)
+    print(response.status_code)
+except ReadTimeout as e:
+    print(e)
+except HTTPError as e:
+    print(e)
+except RequestException as e:
+    print(e)

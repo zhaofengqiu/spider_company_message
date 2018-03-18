@@ -1,0 +1,168 @@
+
+安装：BeautifulSoup
+pip3 install beautifulsoup4
+
+导入bs4模块：from bs4 import BeautifulSoup
+
+
+标签选择器：
+--------------------------------------------------
+
+#选择元素
+
+html = """
+<html><head><title>The Dermouse’s story</title></head>
+<body>
+<p class="title" name="dromouse"><b>The Dermouse’s story</b></p>
+<p id="uu" class="story">Once upon a time there were three little sisters; and thrir names were
+<a href="http://example.com/eisie" class="sister" id="link1"><!--Eisie--></a>,
+<a href="http://example.com/lacie" class="sister" id="link2">Lacie</a> and
+<a href="http://example.com/tillie" class="sister" id="link3">Tillie</a>;
+and thru lived at the bottom of a well.
+</p>
+<p class="story">...</p>
+</body>
+</html>
+"""
+so = BeautifulSoup(html,'lxml')
+print(so.title)
+print(type(so))
+print(so.head)
+print(so.p)
+
+
+#获取名称
+print(so.title.name)
+
+
+
+#获取属性
+print(so.p.attrs['name'])
+
+so = BeautifulSoup(html,'lxml')
+for s in so:
+    print(so.a['href'])
+
+
+#获取内容
+print(so.p.string)
+
+
+#嵌套选择
+print(so.head.title.string)
+
+
+#子节点和子孙节点
+print(so.p.contents)
+
+------------------------------------------------------------------------------------
+
+标准选择器
+find_all(name,attrs,resursive,text,**kwargs)
+name:等于是标签
+attrs:等于属性
+可以根据标签名、属性 、内容查找文档
+
+#so.find_all('p')[0] 等于是获取p标签中第一个
+print(so.find_all('p')[0])
+
+#一层一层获取想要的文本
+res = so.find('p')
+print(res.find('b').string)
+
+#attrs参数解释
+print(so.find_all(attrs={'id':'uu'}))
+print(so.find_all(attrs={'class':'title'}))
+
+#简写，更加方便
+print(so.find_all(id='uu'))
+print(so.find_all('a',class_='sister'))
+
+#name和attrs组合查询
+res = so.find_all('a',attrs={'class':'sister'})
+for s in res:
+    print(s)
+
+
+
+text参数讲解
+print(so.find_all(text='The Dermouse’s story'))
+
+find_parents()
+返回所有祖先节点
+
+find_parent()
+返回直接父节点
+
+find_next_siblings()
+返回后面所有兄弟节点
+
+find_next_siblings()
+饭后后面第一个兄弟节点
+
+find_previous_silings()
+饭后前面所有兄弟节点
+
+find_pervious_sibling()
+返回前面第一个兄弟节点
+
+find_all_next()
+返回节点后所有符合条件的节点
+
+find_next()
+返回第一符合条件的节点
+
+find_all_previous()
+返回节点后所有符合条件的节点
+
+find_previous()
+返回第一个符合条件的节点
+--------------------------------------------------------------
+
+
+css选择器
+通过select()直接传入选择器即可完成选择
+------------------------------------------------------
+html = """
+<div class="panel">
+    <div class="panel-heading">
+        <h4>Hello</h4>
+    <div>
+    <div class="panel-body">
+        <ul class="list" id="list-1">
+            <li class="element">AA</li>
+            <li class="element">BB</li>
+            <li class="element">CC</li>
+        </ul>
+        <ul class="list" id="list-2">
+            <li class="element">EE</li>
+            <li class="element">FF</li>
+        </ul>
+    </div>
+</div>
+"""
+print(so.select('.panel .panel-heading'))
+print(so.select('ul li')[0])
+print(so.select('#list-2 .element'))
+print(so.select('ul')[0])
+
+
+获取属性
+so = BeautifulSoup(html,'lxml')
+for ul in so.select('ul'):
+    print(ul['id'])
+    print(ul.attrs['id'])
+
+获取内容
+so = BeautifulSoup(html,'lxml')
+for ul in so.select('li'):
+    print(ul.get_text())
+
+------------------------------------------------------------------------
+
+总结：
+1.推荐使用lxml解析库，必要时使用html.parser
+2.标签选择器筛选功能弱但是速度快
+3.建议使用find()find_all()查询匹配单个结果或者多个结果
+4.如果对css选择器熟悉建议使用select()
+5.记住常用的获取属性和文本值的方法
